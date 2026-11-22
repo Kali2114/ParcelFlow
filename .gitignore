@@ -158,6 +158,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # Conda environments
 conda-meta/
@@ -221,3 +222,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# PyCharm
+.idea/
