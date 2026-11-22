@@ -16,3 +16,22 @@ CREATE TABLE customers (
         OR (customer_type = 'person' AND nip IS NULL)
     )
 );
+
+
+DROP TABLE IF EXISTS weight_tariffs;
+
+CREATE TABLE weight_tariffs (
+    tariff_id  INT AUTO_INCREMENT PRIMARY KEY,
+    weight_from DECIMAL(10, 2) NOT NULL,
+    weight_to   DECIMAL(10, 2) NOT NULL,
+    price       DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT chk_weight_from CHECK (
+        weight_from > 0.0
+    ),
+    CONSTRAINT chk_weight_to CHECK (
+        weight_to > weight_from
+    ),
+    CONSTRAINT chk_price CHECK (
+        price > 0
+    )
+);
