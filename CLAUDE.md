@@ -93,7 +93,7 @@ Design talking points for the defense:
 
 ## Status
 
-- 2026-11-22: topic chosen (own topic, parcel logistics; **still needs lecturer approval**), repo created,
+- 2026-11-22: topic chosen (own topic, parcel logistics; **approved by the lecturer 2026-11-23**), repo created,
   data model v0 agreed. **Next: the user writes the columns** (name, type, PK/FK, NOT NULL/UNIQUE/CHECK,
   NULL and why) for all 11 tables, then Claude reviews them.
 
@@ -114,20 +114,22 @@ Design talking points for the defense:
 
 ## Progress
 
-**Overall: ~13%** (5 + 3 + 15×4/11; update after each session)
+**Overall: ~18%** (5 + 3 + 15×7/11; update after each session)
 
 | Step | Weight | Status |
 |---|---|---|
 | Setup (repo, Docker/MySQL, Flask, .env) | 5% | ✅ done |
 | Data model planned (11 tables) | 3% | ✅ done |
-| `schema.sql`: 11 tables | 15% | 🔄 4/11 (customers, weight_tariffs, facilities, employees) |
+| `schema.sql`: 11 tables | 15% | 🔄 7/11 (customers, weight_tariffs, facilities, employees, vehicles, event_types, shipments) |
 | `data.sql`: 200+ rows | 10% | ⏳ |
 | Flask ↔ MySQL connection | 5% | ⏳ |
 | CRUD ×3 + N:M + filters + sorting | 20% | ⏳ |
 | Reports R1–R5 | 20% | ⏳ |
 | Transaction, EXPLAIN, GRANT, ALTER, RIGHT JOIN | 7% | ⏳ |
 | Docs + final test from an empty DB | 10% | ⏳ |
-| Lecturer approved the topic | (blocker) | ⏳ email not sent yet |
+| Lecturer approved the topic | (blocker) | ✅ approved (2026-11-23) |
+
+- 2026-11-23: shipments done (3 FKs, all RESTRICT; receiver_* columns; weight_kg >= 0.1; cod NULL = no COD; tracking_number CHAR(12) digits like FedEx). All CHECK names now prefixed with their table (chk_tariff_*, chk_shipment_*). **Next: `scan_events`** (FKs to shipments, event_types, employees, facilities; facility NULL for courier scans outside a facility), then trips, trip_shipments (N:M), claims.
 
 ## Roadmap
 
