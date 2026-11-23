@@ -114,13 +114,13 @@ Design talking points for the defense:
 
 ## Progress
 
-**Overall: ~12%** (5 + 3 + 15×3/11; update after each session)
+**Overall: ~13%** (5 + 3 + 15×4/11; update after each session)
 
 | Step | Weight | Status |
 |---|---|---|
 | Setup (repo, Docker/MySQL, Flask, .env) | 5% | ✅ done |
 | Data model planned (11 tables) | 3% | ✅ done |
-| `schema.sql`: 11 tables | 15% | 🔄 3/11 (customers, weight_tariffs, facilities) |
+| `schema.sql`: 11 tables | 15% | 🔄 4/11 (customers, weight_tariffs, facilities, employees) |
 | `data.sql`: 200+ rows | 10% | ⏳ |
 | Flask ↔ MySQL connection | 5% | ⏳ |
 | CRUD ×3 + N:M + filters + sorting | 20% | ⏳ |
@@ -142,6 +142,13 @@ Design talking points for the defense:
 9. Transaction (COMMIT / ROLLBACK demo)
 10. Demo scripts: ALTER, RIGHT JOIN, index + EXPLAIN, GRANT/REVOKE
 11. Docs (Claude) + requirements mapping, final check from an empty DB
+
+## Reminders for Claude
+
+- **Self join exercise is pending:** the user wants to practise it (facilities f LEFT JOIN facilities h ON f.hub_id = h.facility_id → branch + hub name). Postponed until all tables exist. Remind them before the Flask stage. The employees + supervisor self join was already shown in the employees tests (2026-11-23).
+- employees done 2026-11-23: two FKs, both ON DELETE RESTRICT (manager can't be deleted while they have subordinates; facility can't be deleted while it has staff). Business rule: only `driver` runs trips; couriers and warehouse workers scan.
+
+- **SQL practice block (user wants it):** after schema.sql + data.sql, run exercises on their own DB, levels 1–8: basics → functions/CASE/COALESCE → joins incl. RIGHT and self join → GROUP BY/HAVING → subqueries (IN, EXISTS, correlated) → CTE + bonus window functions → INSERT/UPDATE/DELETE + transactions → ALTER/index/EXPLAIN/GRANT. Claude gives tasks in the ParcelFlow domain, the user writes the queries, Claude checks them. Good exercises become report candidates.
 
 ## Later (ideas parked, not in scope)
 
