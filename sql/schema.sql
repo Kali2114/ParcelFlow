@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS facilities;
 DROP TABLE IF EXISTS weight_tariffs;
@@ -54,4 +55,23 @@ CREATE TABLE facilities (
         (facility_type = 'branch' AND hub_id IS NOT NULL)
         OR (facility_type = 'hub' AND hub_id IS NULL)
     )
+);
+
+
+CREATE TABLE employees (
+    employee_id     INT AUTO_INCREMENT PRIMARY KEY,
+    first_name      VARCHAR(100) NOT NULL,
+    last_name       VARCHAR(100) NOT NULL,
+    role            ENUM('courier', 'driver', 'warehouse_worker', 'dispatcher', 'shift_manager', 'branch_manager') NOT NULL,
+    hire_date       DATE NOT NULL,
+    facility_id     INT  NOT NULL,
+    supervisor_id   INT NULL,
+    CONSTRAINT fk_employee_facility
+    FOREIGN KEY (facility_id)
+    REFERENCES facilities(facility_id)
+    ON DELETE RESTRICT,
+    CONSTRAINT fk_employee_supervisor
+    FOREIGN KEY (supervisor_id)
+    REFERENCES employees(employee_id)
+    ON DELETE RESTRICT
 );
