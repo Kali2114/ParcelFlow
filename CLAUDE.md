@@ -13,8 +13,7 @@ Siedlce, 2026/2027. Full requirements: `~/Downloads/Projekty_BD_2026_2027_wymaga
   instructions, the requirements mapping table and the EXPLAIN write-up. Claude also drafts the
   normalization (1NF–3NF) section, and the user must read and understand it because it comes up at the
   defense.
-- **Language:** answer in English (the user is practising). Switch to Polish when the user asks, or for
-  architecture and design discussions if they prefer.
+- **Language:** Polish (see the global ~/.claude/CLAUDE.md).
 - **Scope is frozen** (see the model below). New ideas go on the "Later" list and are only touched once
   everything required works.
 
@@ -108,6 +107,27 @@ Design talking points for the defense:
   - Console: the same command without `-T` and without the `< file`.
   - Container time is UTC. Remember this for date-based reports.
   - Idea: an extra CHECK that NIP is exactly 10 digits (CHAR_LENGTH / REGEXP).
+- 2026-11-22: `weight_tariffs` done (DECIMAL(10,2), CHECKs: from > 0, to > from, price > 0) and pushed.
+  The user decided against UNIQUE on weight_from (they fill the tariffs themselves). Defense answer: full
+  overlap protection would need a trigger, because CHECK only sees one row. Tariffs start at 0.1 kg, so
+  `shipments.weight` must be ≥ 0.1. Remote switched to SSH, `.idea/` ignored. **Next: `facilities`** (first FK).
+
+## Progress
+
+**Overall: ~12%** (5 + 3 + 15×3/11; update after each session)
+
+| Step | Weight | Status |
+|---|---|---|
+| Setup (repo, Docker/MySQL, Flask, .env) | 5% | ✅ done |
+| Data model planned (11 tables) | 3% | ✅ done |
+| `schema.sql`: 11 tables | 15% | 🔄 3/11 (customers, weight_tariffs, facilities) |
+| `data.sql`: 200+ rows | 10% | ⏳ |
+| Flask ↔ MySQL connection | 5% | ⏳ |
+| CRUD ×3 + N:M + filters + sorting | 20% | ⏳ |
+| Reports R1–R5 | 20% | ⏳ |
+| Transaction, EXPLAIN, GRANT, ALTER, RIGHT JOIN | 7% | ⏳ |
+| Docs + final test from an empty DB | 10% | ⏳ |
+| Lecturer approved the topic | (blocker) | ⏳ email not sent yet |
 
 ## Roadmap
 
