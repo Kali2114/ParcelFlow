@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS scan_events;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS shipments;
@@ -5,6 +6,7 @@ DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS facilities;
 DROP TABLE IF EXISTS weight_tariffs;
 DROP TABLE IF EXISTS event_types;
+
 
 
 CREATE TABLE customers (
@@ -139,6 +141,33 @@ CREATE TABLE shipments (
         ON DELETE RESTRICT,
     CONSTRAINT fk_shipment_destination
         FOREIGN KEY (destination_facility_id)
+        REFERENCES facilities(facility_id)
+        ON DELETE RESTRICT
+);
+
+
+CREATE TABLE scan_events (
+    scan_id                 INT AUTO_INCREMENT PRIMARY KEY,
+    shipment_id             INT NOT NULL,
+    event_type_id           INT NOT NULL,
+    employee_id             INT NOT NULL,
+    facility_id             INT NULL,
+    scan_date               DATETIME NOT NULL,
+    comments                VARCHAR(255) NULL,
+    CONSTRAINT fk_scan_shipment
+        FOREIGN KEY (shipment_id)
+        REFERENCES shipments(shipment_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_scan_event_type
+        FOREIGN KEY (event_type_id)
+        REFERENCES event_types(event_type_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_scan_employee
+        FOREIGN KEY (employee_id)
+        REFERENCES employees(employee_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_scan_facility
+        FOREIGN KEY (facility_id)
         REFERENCES facilities(facility_id)
         ON DELETE RESTRICT
 );
