@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS scan_events;
+DROP TABLE IF EXISTS trip_shipments;
 DROP TABLE IF EXISTS trips;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS vehicles;
@@ -204,4 +205,22 @@ CREATE TABLE trips (
         FOREIGN KEY (origin_facility_id)
         REFERENCES facilities(facility_id)
         ON DELETE RESTRICT
+);
+
+
+CREATE TABLE trip_shipments (
+    trip_shipment_id        INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id                 INT NOT NULL,
+    shipment_id             INT NOT NULL,
+    CONSTRAINT fk_trip_shipment_trip
+        FOREIGN KEY (trip_id)
+        REFERENCES trips(trip_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_trip_shipment_shipment
+        FOREIGN KEY (shipment_id)
+        REFERENCES shipments(shipment_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT uq_trip_shipment UNIQUE (
+        trip_id, shipment_id
+    )
 );
