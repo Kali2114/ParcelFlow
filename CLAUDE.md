@@ -114,13 +114,13 @@ Design talking points for the defense:
 
 ## Progress
 
-**Overall: ~19%** (5 + 3 + 15×8/11; update after each session)
+**Overall: ~23%** (5 + 3 + 15; update after each session)
 
 | Step | Weight | Status |
 |---|---|---|
 | Setup (repo, Docker/MySQL, Flask, .env) | 5% | ✅ done |
 | Data model planned (11 tables) | 3% | ✅ done |
-| `schema.sql`: 11 tables | 15% | 🔄 8/11 (+ scan_events) |
+| `schema.sql`: 11 tables | 15% | ✅ 11/11 |
 | `data.sql`: 200+ rows | 10% | ⏳ |
 | Flask ↔ MySQL connection | 5% | ⏳ |
 | CRUD ×3 + N:M + filters + sorting | 20% | ⏳ |
@@ -130,6 +130,8 @@ Design talking points for the defense:
 | Lecturer approved the topic | (blocker) | ✅ approved (2026-11-23) |
 
 - 2026-11-23: shipments done (3 FKs, all RESTRICT; receiver_* columns; weight_kg >= 0.1; cod NULL = no COD; tracking_number CHAR(12) digits like FedEx). All CHECK names now prefixed with their table (chk_tariff_*, chk_shipment_*). **Next: `scan_events`** (FKs to shipments, event_types, employees, facilities; facility NULL for courier scans outside a facility), then trips, trip_shipments (N:M), claims.
+- 2026-11-25: scan_events, trips (CHECK origin <> destination, arrival > departure, arrival NULL = still on the road) and trip_shipments (N:M, surrogate PK + `uq_trip_shipment` UNIQUE(trip_id, shipment_id), both FKs RESTRICT) done and tested (12 tests). Defense note: `trips.driver_id` can point to any employee, CHECK can't see `employees.role` (would need a trigger or app validation). **Next: `claims`.**
+- 2026-11-25 (later): claims done and tested (12 tests): ENUM type loss/damage/delay, status new/pending/accepted/rejected DEFAULT 'new', resolved_date NULL = open, compensation_amount NULL = no decision yet vs 0 = decided, nothing paid, reviewer_id NULL = not assigned (R3 material), CHECK claimed > 0, 0 <= compensation <= claimed, resolved > filed, both FKs RESTRICT. Added `chk_claim_status` (4 scenarios joined by OR): new = all NULL; pending = reviewer only; accepted = date + reviewer + compensation > 0; rejected = date + reviewer + compensation = 0. Needs explicit IS NOT NULL next to > 0 / = 0, because NULL gives UNKNOWN and CHECK lets UNKNOWN through (good defense point). Tested: 4 OK + 11 rejected cases incl. UPDATE new→accepted. **Schema complete (11/11). Next: `data.sql`.**
 
 ## Roadmap
 
@@ -154,4 +156,4 @@ Design talking points for the defense:
 
 ## Later (ideas parked, not in scope)
 
-- (empty)
+- Trigger practice (user wants it, 2026-11-25), after the required parts work: (1) BEFORE INSERT/UPDATE on `trips` that rejects a `driver_id` whose role is not `driver` (SIGNAL), (2) optional BEFORE INSERT on `shipments` that fills `price` from `weight_tariffs`. Must stay in a separate demo script or at the end of schema.sql so it still runs from an empty DB.

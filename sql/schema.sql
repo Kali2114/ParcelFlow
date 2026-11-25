@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS scan_events;
 DROP TABLE IF EXISTS trip_shipments;
 DROP TABLE IF EXISTS trips;
+DROP TABLE IF EXISTS claims;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS shipments;
@@ -222,5 +223,54 @@ CREATE TABLE trip_shipments (
         ON DELETE RESTRICT,
     CONSTRAINT uq_trip_shipment UNIQUE (
         trip_id, shipment_id
+    )
+);
+
+
+CREATE TABLE claims (
+    claim_id            INT AUTO_INCREMENT PRIMARY KEY,
+    shipment_id         INT NOT NULL,
+    claim_type          ENUM('loss', 'damage', 'delay') NOT NULL,
+    status              ENUM('new', 'pending', 'accepted', 'rejected') NOT NULL DEFAULT 'new',
+    filed_date          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    resolved_date       DATETIME NULL,
+    claimed_amount      DECIMAL(10, 2) NOT NULL,
+    compensation_amount DECIMAL(10, 2) NULL,
+    reviewer_id         INT NULL,
+    description         VARCHAR(1000) NOT NULL,
+    CONSTRAINT chk_claim_amounts CHECK (
+        claimed_amount > 0 AND
+        compensation_amount >= 0 AND
+        claimed_amount >= compensation_amount
+    ),
+    CONSTRAINT chk_claim_dates CHECK (
+        resolved_date > filed_date
+    ),
+    CONSTRAINT fk_claim_shipment
+        FOREIGN KEY (shipment_id)
+        REFERENCES shipments(shipment_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_claim_reviewer
+        FOREIGN KEY (reviewer_id)
+        REFERENCES employees(employee_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT chk_claim_status CHECK (
+        (status = 'new' AND resolved_date IS NULL
+        AND compensation_amount IS NULL
+        AND reviewer_id IS NULL)
+        OR
+        (status = 'pending' AND resolved_date IS NULL
+        AND compensation_amount IS NULL
+        AND reviewer_id IS NOT NULL)
+        OR
+        (status = 'accepted' AND compensation_amount IS NOT NULL
+        AND compensation_amount > 0
+        AND resolved_date IS NOT NULL
+        AND reviewer_id IS NOT NULL)
+        OR
+        (status = 'rejected' AND compensation_amount = 0
+        AND compensation_amount IS NOT NULL
+        AND resolved_date IS NOT NULL
+        AND reviewer_id IS NOT NULL)
     )
 );
