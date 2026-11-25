@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS scan_events;
+DROP TABLE IF EXISTS trips;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS shipments;
@@ -168,6 +169,39 @@ CREATE TABLE scan_events (
         ON DELETE RESTRICT,
     CONSTRAINT fk_scan_facility
         FOREIGN KEY (facility_id)
+        REFERENCES facilities(facility_id)
+        ON DELETE RESTRICT
+);
+
+
+CREATE TABLE trips (
+    trip_id                     INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_id                  INT NOT NULL,
+    driver_id                   INT NOT NULL,
+    destination_facility_id     INT NOT NULL,
+    origin_facility_id          INT NOT NULL,
+    departure_date              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    arrival_date                DATETIME NULL,
+    CONSTRAINT chk_trip_facilities CHECK (
+        destination_facility_id <> origin_facility_id
+    ),
+    CONSTRAINT chk_trip_dates CHECK (
+        arrival_date > departure_date
+    ),
+    CONSTRAINT fk_trip_vehicle
+        FOREIGN KEY (vehicle_id)
+        REFERENCES vehicles(vehicle_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_trip_driver
+        FOREIGN KEY (driver_id)
+        REFERENCES employees(employee_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_trip_destination_facility
+        FOREIGN KEY (destination_facility_id)
+        REFERENCES facilities(facility_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_trip_origin_facility
+        FOREIGN KEY (origin_facility_id)
         REFERENCES facilities(facility_id)
         ON DELETE RESTRICT
 );

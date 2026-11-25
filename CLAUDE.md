@@ -114,13 +114,13 @@ Design talking points for the defense:
 
 ## Progress
 
-**Overall: ~18%** (5 + 3 + 15×7/11; update after each session)
+**Overall: ~19%** (5 + 3 + 15×8/11; update after each session)
 
 | Step | Weight | Status |
 |---|---|---|
 | Setup (repo, Docker/MySQL, Flask, .env) | 5% | ✅ done |
 | Data model planned (11 tables) | 3% | ✅ done |
-| `schema.sql`: 11 tables | 15% | 🔄 7/11 (customers, weight_tariffs, facilities, employees, vehicles, event_types, shipments) |
+| `schema.sql`: 11 tables | 15% | 🔄 8/11 (+ scan_events) |
 | `data.sql`: 200+ rows | 10% | ⏳ |
 | Flask ↔ MySQL connection | 5% | ⏳ |
 | CRUD ×3 + N:M + filters + sorting | 20% | ⏳ |
