@@ -27,7 +27,7 @@ Siedlce, 2026/2027. Full requirements: `~/Downloads/Projekty_BD_2026_2027_wymaga
   column or direction, whitelist the allowed values.
 - The app must **not** use the MySQL root account. It gets its own user with limited GRANTs.
 - Credentials go in `.env` (gitignored), with `.env.sample` committed.
-- The repo stays **private** until graded, then it becomes public for the portfolio.
+- The repo is **public** (user's choice 2026-11-25, not worried about copying). Never commit secrets.
 - The lecturer grades **only the SQL**. The UI just has to work, so keep it minimal.
 
 ## Data model v0 (agreed 2026-11-22), 11 tables
@@ -132,6 +132,7 @@ Design talking points for the defense:
 - 2026-11-23: shipments done (3 FKs, all RESTRICT; receiver_* columns; weight_kg >= 0.1; cod NULL = no COD; tracking_number CHAR(12) digits like FedEx). All CHECK names now prefixed with their table (chk_tariff_*, chk_shipment_*). **Next: `scan_events`** (FKs to shipments, event_types, employees, facilities; facility NULL for courier scans outside a facility), then trips, trip_shipments (N:M), claims.
 - 2026-11-25: scan_events, trips (CHECK origin <> destination, arrival > departure, arrival NULL = still on the road) and trip_shipments (N:M, surrogate PK + `uq_trip_shipment` UNIQUE(trip_id, shipment_id), both FKs RESTRICT) done and tested (12 tests). Defense note: `trips.driver_id` can point to any employee, CHECK can't see `employees.role` (would need a trigger or app validation). **Next: `claims`.**
 - 2026-11-25 (later): claims done and tested (12 tests): ENUM type loss/damage/delay, status new/pending/accepted/rejected DEFAULT 'new', resolved_date NULL = open, compensation_amount NULL = no decision yet vs 0 = decided, nothing paid, reviewer_id NULL = not assigned (R3 material), CHECK claimed > 0, 0 <= compensation <= claimed, resolved > filed, both FKs RESTRICT. Added `chk_claim_status` (4 scenarios joined by OR): new = all NULL; pending = reviewer only; accepted = date + reviewer + compensation > 0; rejected = date + reviewer + compensation = 0. Needs explicit IS NOT NULL next to > 0 / = 0, because NULL gives UNKNOWN and CHECK lets UNKNOWN through (good defense point). Tested: 4 OK + 11 rejected cases incl. UPDATE new→accepted. **Schema complete (11/11). Next: `data.sql`.**
+- 2026-11-26: business rule parcels only up to 100 kg (heavier = pallet, not handled): `chk_shipment_weight` is now `weight_kg BETWEEN 0.1 AND 100`. That used up the planned ALTER TABLE demo idea, so pick another one later (add a column or an index). `data.sql` started: weight_tariffs 0.1–5 / 5.01–10 / 10.01–20 / 20.01–100 (steps of 0.01 because DECIMAL(10,2), so no overlap and no gaps). **Next: event_types**, then the other tables in FK order.
 
 ## Roadmap
 

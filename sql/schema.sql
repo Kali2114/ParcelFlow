@@ -126,7 +126,7 @@ CREATE TABLE shipments (
     cod                         DECIMAL(10, 2) NULL,
     shipping_date               DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT chk_shipment_weight CHECK (
-        weight_kg >= 0.1
+        weight_kg BETWEEN 0.1 AND 100
     ),
     CONSTRAINT chk_shipment_price CHECK (
         price > 0.0
