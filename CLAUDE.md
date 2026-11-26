@@ -148,6 +148,13 @@ Design talking points for the defense:
 10. Demo scripts: ALTER, RIGHT JOIN, index + EXPLAIN, GRANT/REVOKE
 11. Docs (Claude) + requirements mapping, final check from an empty DB
 
+## Seed data ids (data.sql, fixed by insert order)
+
+- weight_tariffs: 1 = 0.1–5 kg (5 zł), 2 = 5.01–10 (10), 3 = 10.01–20 (20), 4 = 20.01–100 (30)
+- event_types: 1 pickup, 2 arrival, 3 loading, 4 out_for_delivery, 5 delivery, 6 delivery_attempt, 7 refusal, 8 rescheduling
+- facilities: 1 HUB_WAW, 2 HUB_LDZ; under WAW: 3 BR_SDE Siedlce, 4 BR_LBN Lublin, 5 BR_BIA Bialystok, 6 BR_GDA Gdansk; under LDZ: 7 BR_BDG Bydgoszcz, 8 BR_SCZ Szczecin, 9 BR_KRK Krakow, 10 BR_KAT Katowice
+- R3 idea: keep BR_SCZ (8) with no staff and no shipments
+
 ## Reminders for Claude
 
 - **Self join exercise is pending:** the user wants to practise it (facilities f LEFT JOIN facilities h ON f.hub_id = h.facility_id → branch + hub name). Postponed until all tables exist. Remind them before the Flask stage. The employees + supervisor self join was already shown in the employees tests (2026-11-23).
