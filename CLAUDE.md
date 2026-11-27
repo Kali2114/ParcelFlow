@@ -154,6 +154,7 @@ Design talking points for the defense:
 - event_types: 1 pickup, 2 arrival, 3 loading, 4 out_for_delivery, 5 delivery, 6 delivery_attempt, 7 refusal, 8 rescheduling
 - facilities: 1 HUB_WAW, 2 HUB_LDZ; under WAW: 3 BR_SDE Siedlce, 4 BR_LBN Lublin, 5 BR_BIA Bialystok, 6 BR_GDA Gdansk; under LDZ: 7 BR_BDG Bydgoszcz, 8 BR_SCZ Szczecin, 9 BR_KRK Krakow, 10 BR_KAT Katowice
 - R3 idea: keep BR_SCZ (8) with no staff and no shipments
+- customers (12 persons, 8 companies; created_at = load time for all): persons 1 Angjel Dust (Siedlce), 2 Kamiljeg Changmil (Siedlce), 3 Ignacy Paderewski (Warszawa), 6 Marta Wisniewska (Lublin), 7 Piotr Zielinski (Bialystok), 8 Anna Kaczmarek (Gdansk), 9 Tomasz Lewandowski (Bydgoszcz), 10 Katarzyna Dabrowska (Krakow), 11 Michal Wojcik (Katowice), 12 Agnieszka Mazur (Warszawa), 13 Pawel Krawczyk (Siedlce), 14 Ewa Grabowska (Lodz); companies 4 Intel Company (Warszawa), 5 Siemens Opposite Conc. (Katowice), 15 Mebloteka S.A. (Warszawa), 16 Kowalski Transport (Siedlce), 17 Bursztynowy Sklep (Gdansk), 18 Gorska Kawa (Krakow), 19 Elektro-Pol (Katowice), 20 Agro-Lub (Lublin). Plan: 15/16/19 = heavy senders (HAVING passes), 7 and 14 = no shipments (R3).
 
 ## Reminders for Claude
 
