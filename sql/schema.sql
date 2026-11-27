@@ -274,3 +274,4 @@ CREATE TABLE claims (
         AND reviewer_id IS NOT NULL)
     )
 );
+
