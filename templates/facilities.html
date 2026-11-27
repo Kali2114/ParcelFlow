@@ -15,7 +15,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Hub ID</th>
+                <th>Hub</th>
                 <th>Street</th>
                 <th>Postal code</th>
                 <th>City</th>
@@ -27,7 +27,7 @@
                 <td class="num">{{ f.facility_id }}</td>
                 <td><strong>{{ f.name }}</strong></td>
                 <td><span class="badge badge-{{ f.facility_type }}">{{ f.facility_type }}</span></td>
-                <td class="num">{{ f.hub_id if f.hub_id is not none else '—' }}</td>
+                <td>{{ f.hub_name if f.hub_name is not none else '—' }}</td>
                 <td>{{ f.street }}</td>
                 <td>{{ f.postal_code }}</td>
                 <td>{{ f.city }}</td>

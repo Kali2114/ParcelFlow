@@ -166,7 +166,7 @@ Design talking points for the defense:
 
 ## Reminders for Claude
 
-- **Self join exercise is pending:** the user wants to practise it (facilities f LEFT JOIN facilities h ON f.hub_id = h.facility_id → branch + hub name). Postponed until all tables exist. Remind them before the Flask stage. The employees + supervisor self join was already shown in the employees tests (2026-11-23).
+- Self join done 2026-11-27 in `/facilities` (f LEFT JOIN facilities h ON f.hub_id = h.facility_id, h.name AS hub_name), written by the user with step-by-step hints. **The user wants to go over it again** (aliases, why FK = PK, LEFT vs INNER): offer a short recap or a similar exercise (employees + supervisor) next session. The employees + supervisor self join was already shown in the employees tests (2026-11-23).
 - employees done 2026-11-23: two FKs, both ON DELETE RESTRICT (manager can't be deleted while they have subordinates; facility can't be deleted while it has staff). Business rule: only `driver` runs trips; couriers and warehouse workers scan.
 
 - **SQL practice block (user wants it):** after schema.sql + data.sql, run exercises on their own DB, levels 1–8: basics → functions/CASE/COALESCE → joins incl. RIGHT and self join → GROUP BY/HAVING → subqueries (IN, EXISTS, correlated) → CTE + bonus window functions → INSERT/UPDATE/DELETE + transactions → ALTER/index/EXPLAIN/GRANT. Claude gives tasks in the ParcelFlow domain, the user writes the queries, Claude checks them. Good exercises become report candidates.
