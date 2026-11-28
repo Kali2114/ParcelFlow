@@ -41,36 +41,66 @@ def list_customers():
     return flask.render_template("customers.html", customers=data)
 
 
+def get_customer_form_data():
+    form = flask.request.form
+    return (
+        form.get("name"),
+        form.get("customer_type"),
+        form.get("email"),
+        form.get("phone"),
+        form.get("nip").strip() or None,
+        form.get("street"),
+        form.get("city"),
+        form.get("postal_code"),
+    )
+
+
+def save_customer(sql, params, success_message):
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(sql, params)
+        connection.commit()
+        flask.flash(success_message, "success")
+    except pymysql.err.IntegrityError:
+        flask.flash("A customer with this email or NIP already exists", "error")
+    except pymysql.err.OperationalError:
+        flask.flash("Persons can't have a NIP, companies must have one", "error")
+    finally:
+        connection.close()
+
+
 @app.route("/customers/new", methods=["GET", "POST"])
 def add_customer():
     if flask.request.method == "POST":
-        name = flask.request.form.get("name")
-        customer_type = flask.request.form.get("customer_type")
-        email = flask.request.form.get("email")
-        phone = flask.request.form.get("phone")
-        nip = flask.request.form.get("nip").strip() or None
-        street = flask.request.form.get("street")
-        city = flask.request.form.get("city")
-        postal_code = flask.request.form.get("postal_code")
-        connection = get_connection()
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute(
-                    """INSERT INTO customers (name, customer_type, email,
-                phone, nip, street, city, postal_code)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
-                    (name, customer_type, email, phone, nip, street, city, postal_code),
-                )
-                flask.flash("Customer successfully added", "success")
-                connection.commit()
-            except pymysql.err.IntegrityError:
-                flask.flash("Customer already exists", "error")
-            except pymysql.err.OperationalError:
-                flask.flash(
-                    "Persons can't have a NIP, companies must have one",
-                    "error",
-                )
-            finally:
-                connection.close()
-        return flask.redirect("/customers")
+        save_customer(
+            """INSERT INTO customers (name, customer_type, email,
+            phone, nip, street, city, postal_code)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+            get_customer_form_data(),
+            "Customer successfully added",
+        )
+        return flask.redirect(flask.url_for("list_customers"))
     return flask.render_template("customer_form.html")
+
+
+@app.route("/customers/<int:customer_id>/edit", methods=["GET", "POST"])
+def edit_customer(customer_id):
+    if flask.request.method == "POST":
+        save_customer(
+            """UPDATE customers SET name = %s, customer_type = %s, email = %s,
+            phone = %s, nip = %s, street = %s, city = %s, postal_code = %s
+            WHERE customer_id = %s""",
+            get_customer_form_data() + (customer_id,),
+            "Customer successfully updated",
+        )
+        return flask.redirect(flask.url_for("list_customers"))
+
+    connection = get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM customers WHERE customer_id = %s", (customer_id,))
+        customer = cursor.fetchone()
+    connection.close()
+    if customer is None:
+        flask.abort(404)
+    return flask.render_template("customer_form.html", customer=customer)
