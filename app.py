@@ -20,3 +20,14 @@ def list_facilities():
         data = cursor.fetchall()
     connection.close()
     return flask.render_template("facilities.html", facilities=data)
+
+
+@app.route("/customers")
+def list_customers():
+    connection = get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute("""SELECT customer_id, customer_type, name,
+        nip, email, phone, city FROM customers ORDER BY name""")
+        data = cursor.fetchall()
+    connection.close()
+    return flask.render_template("customers.html", customers=data)

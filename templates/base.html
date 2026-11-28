@@ -12,6 +12,8 @@
         <nav>
             <a href="{{ url_for('list_facilities') }}"
                class="{{ 'active' if request.endpoint == 'list_facilities' }}">Facilities</a>
+            <a href="{{ url_for('list_customers') }}"
+               class="{{ 'active' if request.endpoint == 'list_customers' }}">Customers</a>
         </nav>
     </header>
 
