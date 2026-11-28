@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% set editing = customer is defined and customer.customer_id is defined %}
+{% set c = customer if customer is defined else {} %}
+
+{% block title %}{{ 'Edit customer' if editing else 'New customer' }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>{{ 'Edit customer' if editing else 'New customer' }}</h1>
+    <a class="link-muted" href="{{ url_for('list_customers') }}">← Back to customers</a>
+</div>
+
+<form method="post" class="card form">
+    <fieldset class="radio-row">
+        <legend>Type</legend>
+        <label>
+            <input type="radio" name="customer_type" value="person"
+                   {{ 'checked' if c.get('customer_type', 'person') == 'person' }} required>
+            Person
+        </label>
+        <label>
+            <input type="radio" name="customer_type" value="company"
+                   {{ 'checked' if c.get('customer_type') == 'company' }}>
+            Company
+        </label>
+    </fieldset>
+
+    <div class="grid">
+        <label class="span-2">Name
+            <input name="name" maxlength="150" required value="{{ c.get('name', '') }}">
+        </label>
+        <label>NIP <small>(companies only, 10 digits)</small>
+            <input name="nip" maxlength="10" inputmode="numeric" value="{{ c.get('nip') or '' }}">
+        </label>
+        <label>Email
+            <input name="email" type="email" maxlength="100" required value="{{ c.get('email', '') }}">
+        </label>
+        <label>Phone
+            <input name="phone" maxlength="20" required value="{{ c.get('phone', '') }}">
+        </label>
+        <label class="span-2">Street
+            <input name="street" maxlength="100" required value="{{ c.get('street', '') }}">
+        </label>
+        <label>Postal code
+            <input name="postal_code" maxlength="6" placeholder="00-000" required value="{{ c.get('postal_code', '') }}">
+        </label>
+        <label>City
+            <input name="city" maxlength="50" required value="{{ c.get('city', '') }}">
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn">{{ 'Save changes' if editing else 'Add customer' }}</button>
+        <a class="btn btn-ghost" href="{{ url_for('list_customers') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}
